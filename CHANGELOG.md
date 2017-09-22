@@ -1,5 +1,10 @@
 <pre>
 
+Version 0.1.1
+=============
+> Simplifies and improved code
+----
+
 Version 0.1.0
 =============
 
