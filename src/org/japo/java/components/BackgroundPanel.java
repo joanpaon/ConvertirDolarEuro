@@ -19,11 +19,16 @@ import java.awt.Graphics;
 import java.awt.Image;
 import javax.swing.JPanel;
 
+/**
+ *
+ * @author José A. Pacheco Ondoño - joanpaon@gmail.com
+ */
 public class BackgroundPanel extends JPanel {
 
-    // Referencia a la imagen de fondo
+    // Referencia Imagen Fondo
     private Image img;
 
+    // Constructor parametrizado
     public BackgroundPanel(Image img) {
         if (img != null) {
             this.img = img;
@@ -32,9 +37,6 @@ public class BackgroundPanel extends JPanel {
 
     @Override
     public void paint(Graphics g) {
-        // Panel opaco - Muestra imagen
-        setOpaque(false);
-
         // Dibuja la imagen en el área de la etiqueta
         g.drawImage(
                 img,        // Objeto Image - Imagen de fondo para el panel
@@ -43,7 +45,10 @@ public class BackgroundPanel extends JPanel {
                 getHeight(),// Alto de la imagen - Alto del panel
                 this);      // Dónde se dibujará la imagen - Panel
 
-        // Pinta la imagen
+        // Panel Trasparente - Mostrar Imagen
+        setOpaque(false);
+
+        // Dibujar Panel
         super.paint(g);
     }
 }

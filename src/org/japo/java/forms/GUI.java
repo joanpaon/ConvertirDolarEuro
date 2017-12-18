@@ -72,7 +72,7 @@ public class GUI extends JFrame {
         initAfter();
     }
 
-    // Construcción del IGU
+    // Construcción - GUI
     private void initComponents() {
         // Etiqueta Euro
         lblEur = new JLabel("Euros");
@@ -93,19 +93,19 @@ public class GUI extends JFrame {
         txfEur.setFont(new Font("Consolas", Font.PLAIN, 32));
         txfEur.setPreferredSize(new Dimension(200, 50));
         txfEur.setHorizontalAlignment(JTextField.RIGHT);
+        txfEur.setBackground(Color.ORANGE);
+        txfEur.setCaretPosition(0);
         txfEur.addActionListener(new AEM(this));
         txfEur.addFocusListener(new FEM(this));
-        txfEur.setBackground(Color.ORANGE);
-        txfEur.setSelectionStart(0);
 
         // Campo de Dólares
         txfDol = new JTextField("0.00");
         txfDol.setFont(new Font("Consolas", Font.PLAIN, 32));
         txfDol.setPreferredSize(new Dimension(200, 50));
         txfDol.setHorizontalAlignment(JTextField.RIGHT);
+        txfDol.setBackground(Color.LIGHT_GRAY);
         txfDol.addActionListener(new AEM(this));
         txfDol.addFocusListener(new FEM(this));
-        txfDol.setBackground(Color.LIGHT_GRAY);
 
         // Imagen de Fondo
         String rutaImg = prp.getProperty(PRP_BACKGROUND, DEF_BACKGROUND);
@@ -120,7 +120,7 @@ public class GUI extends JFrame {
         pnlPpal.add(lblDol);
         pnlPpal.add(txfDol);
 
-        // Ventana principal
+        // Ventana Principal
         setContentPane(pnlPpal);
         setTitle("Swing Manual #07");
         setResizable(false);
@@ -138,7 +138,7 @@ public class GUI extends JFrame {
         UtilesSwing.establecerLnF(prp.getProperty(PRP_LOOK_AND_FEEL, DEF_LOOK_AND_FEEL));
     }
 
-    // Inicialización Posterior
+    // Inicialización Anterior
     private void initAfter() {
         // Establecer Favicon
         UtilesSwing.establecerFavicon(this, prp.getProperty(PRP_FAVICON, DEF_FAVICON));
@@ -160,7 +160,12 @@ public class GUI extends JFrame {
             // Cursor al Principio
             ((JTextField) (ae.getSource())).setCaretPosition(0);
         } catch (NumberFormatException e) {
-            System.out.println("ERROR: Factor de conversión erróneo");
+            // Gestión de Error
+            if (ae.getSource().equals(txfEur)) {
+                txfDol.setText("???");
+            } else {
+                txfEur.setText("???");
+            }
         }
     }
 
@@ -181,7 +186,7 @@ public class GUI extends JFrame {
             txtEur = String.format(Locale.ENGLISH, "%.2f", dinEur);
             String txtDol = String.format(Locale.ENGLISH, "%.2f", dinDol);
 
-            // Actualiza Campos de texto
+            // Actualiza Campos de Texto
             txfEur.setText(txtEur);
             txfDol.setText(txtDol);
         } catch (NumberFormatException e) {
@@ -214,22 +219,24 @@ public class GUI extends JFrame {
         }
     }
 
+    // Gestión Foco Ganado
     public void procesarFocoGanado(FocusEvent e) {
         // Campo de Texto - Evento
         JTextField txfAct = (JTextField) e.getSource();
 
-        // Color fondo - GANADO
+        // Color Fondo - GANADO
         txfAct.setBackground(Color.ORANGE);
 
-        // Cursor al Principio
+        // Mover Cursor - PRINCIPIO
         txfAct.setCaretPosition(0);
     }
 
+    // Gestión Foco Perdido
     public void procesarFocoPerdido(FocusEvent e) {
         // Campo de Texto - Evento
         JTextField txfAct = (JTextField) e.getSource();
 
-        // Color fondo - PERDIDO
+        // Color Fondo - PERDIDO
         txfAct.setBackground(Color.LIGHT_GRAY);
     }
 }
