@@ -1,4 +1,4 @@
-/*
+/* 
  * Copyright 2017 José A. Pacheco Ondoño - joanpaon@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,6 +21,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusEvent;
 import java.net.URL;
 import java.util.Locale;
 import java.util.Properties;
@@ -29,9 +30,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
 import org.japo.java.components.BackgroundPanel;
 import org.japo.java.events.AEM;
+import org.japo.java.events.FEM;
 import org.japo.java.libraries.UtilesSwing;
 
 /**
@@ -73,12 +74,6 @@ public class GUI extends JFrame {
 
     // Construcción del IGU
     private void initComponents() {
-        // Bordes
-        EmptyBorder brdPNL = new EmptyBorder(10, 10, 10, 10);
-
-        // Gestor de Eventos de Acción
-        AEM aem = new AEM(this);
-
         // Etiqueta Euro
         lblEur = new JLabel("Euros");
         lblEur.setFont(new Font("Calibri", Font.BOLD, 32));
@@ -92,26 +87,33 @@ public class GUI extends JFrame {
         lblDol.setPreferredSize(new Dimension(200, 50));
         lblDol.setOpaque(true);
         lblDol.setBackground(new Color(255, 255, 255, 200));
-        
+
         // Campo de Euros
         txfEur = new JTextField("0.00");
         txfEur.setFont(new Font("Consolas", Font.PLAIN, 32));
         txfEur.setPreferredSize(new Dimension(200, 50));
         txfEur.setHorizontalAlignment(JTextField.RIGHT);
-        txfEur.addActionListener(aem);
+        txfEur.addActionListener(new AEM(this));
+        txfEur.addFocusListener(new FEM(this));
+        txfEur.setBackground(Color.ORANGE);
+        txfEur.setSelectionStart(0);
 
         // Campo de Dólares
         txfDol = new JTextField("0.00");
         txfDol.setFont(new Font("Consolas", Font.PLAIN, 32));
         txfDol.setPreferredSize(new Dimension(200, 50));
         txfDol.setHorizontalAlignment(JTextField.RIGHT);
-        txfDol.addActionListener(aem);
+        txfDol.addActionListener(new AEM(this));
+        txfDol.addFocusListener(new FEM(this));
+        txfDol.setBackground(Color.LIGHT_GRAY);
+
+        // Imagen de Fondo
+        String rutaImg = prp.getProperty(PRP_BACKGROUND, DEF_BACKGROUND);
+        URL urlImg = ClassLoader.getSystemResource(rutaImg);
+        Image img = new ImageIcon(urlImg).getImage();
 
         // Panel Principal
-        String fondoPpal = prp.getProperty(PRP_BACKGROUND, DEF_BACKGROUND);
-        URL urlPpal = ClassLoader.getSystemResource(fondoPpal);
-        Image imgPpal = new ImageIcon(urlPpal).getImage();
-        JPanel pnlPpal = new BackgroundPanel(imgPpal);
+        JPanel pnlPpal = new BackgroundPanel(img);
         pnlPpal.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 54));
         pnlPpal.add(lblEur);
         pnlPpal.add(txfEur);
@@ -150,40 +152,84 @@ public class GUI extends JFrame {
 
             // Tipo de Conversión
             if (ae.getSource().equals(txfEur)) {
-                convertirE2D(factor);     // E >> D
+                convertirE2D(txfEur, txfDol, factor);     // E >> D
             } else {
-                convertirD2E(factor);     // D >> E
+                convertirD2E(txfDol, txfEur, factor);     // D >> E
             }
-        } catch (Exception e) {
+
+            // Cursor al Principio
+            ((JTextField) (ae.getSource())).setCaretPosition(0);
+        } catch (NumberFormatException e) {
             System.out.println("ERROR: Factor de conversión erróneo");
         }
     }
 
     // E >> D
-    private void convertirE2D(double factor) {
+    private void convertirE2D(JTextField txfEur, JTextField txfDol, double factor) {
         try {
-            String textoEuros = txfEur.getText();
-            textoEuros = textoEuros.replace(',', '.');
-            double dineroEuros = Double.parseDouble(textoEuros);
-            double dineroDolar = dineroEuros * factor;
-            String textoDolar = String.format(Locale.ENGLISH, "%.2f", dineroDolar);
-            txfDol.setText(textoDolar);
+            // Campo de texto Euros > Texto
+            String txtEur = txfEur.getText();
+
+            // Formato Fraccionario SPANISH > ENGLISH 
+            txtEur = txtEur.replace(',', '.');
+
+            // Obtiene Euros y Dólares
+            double dinEur = Double.parseDouble(txtEur);
+            double dinDol = dinEur * factor;
+
+            // Formatea Euros y Dólares
+            txtEur = String.format(Locale.ENGLISH, "%.2f", dinEur);
+            String txtDol = String.format(Locale.ENGLISH, "%.2f", dinDol);
+
+            // Actualiza Campos de texto
+            txfEur.setText(txtEur);
+            txfDol.setText(txtDol);
         } catch (NumberFormatException e) {
             txfDol.setText("???");
         }
     }
 
     // D >> E
-    private void convertirD2E(double factor) {
+    private void convertirD2E(JTextField txfDol, JTextField txfEur, double factor) {
         try {
-            String textoDolar = txfDol.getText();
-            textoDolar = textoDolar.replace(',', '.');
-            double dineroDolar = Double.parseDouble(textoDolar);
-            double dineroEuro = dineroDolar / factor;
-            String textoEuro = String.format(Locale.ENGLISH, "%.2f", dineroEuro);
-            txfEur.setText(textoEuro);
+            // Campo de Texto - Dólares > Texto
+            String txtDol = txfDol.getText();
+
+            // Formato Fraccionario SPANISH > ENGLISH 
+            txtDol = txtDol.replace(',', '.');
+
+            // Obtiene Dólares y Euros
+            double dinDol = Double.parseDouble(txtDol);
+            double dinEur = dinDol / factor;
+
+            // Formatea Euros y Dólares
+            txtDol = String.format(Locale.ENGLISH, "%.2f", dinDol);
+            String txtEur = String.format(Locale.ENGLISH, "%.2f", dinEur);
+
+            // Actualiza Campos de Texto
+            txfDol.setText(txtDol);
+            txfEur.setText(txtEur);
         } catch (NumberFormatException e) {
             txfEur.setText("???");
         }
+    }
+
+    public void procesarFocoGanado(FocusEvent e) {
+        // Campo de Texto - Evento
+        JTextField txfAct = (JTextField) e.getSource();
+
+        // Color fondo - GANADO
+        txfAct.setBackground(Color.ORANGE);
+
+        // Cursor al Principio
+        txfAct.setCaretPosition(0);
+    }
+
+    public void procesarFocoPerdido(FocusEvent e) {
+        // Campo de Texto - Evento
+        JTextField txfAct = (JTextField) e.getSource();
+
+        // Color fondo - PERDIDO
+        txfAct.setBackground(Color.LIGHT_GRAY);
     }
 }

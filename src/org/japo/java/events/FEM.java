@@ -1,4 +1,4 @@
-/*
+/* 
  * Copyright 2017 José A. Pacheco Ondoño - joanpaon@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,25 +25,21 @@ import org.japo.java.forms.GUI;
  */
 public class FEM implements FocusListener {
 
-    // Referencia al igu
+    // Referencia al GUI
     private final GUI gui;
 
+    // Constructor
     public FEM(GUI gui) {
         this.gui = gui;
     }
 
     @Override
     public void focusGained(FocusEvent e) {
-        // Analizar evento
-        
-        // LLamar a algún método de GUI
+        gui.procesarFocoGanado(e);
     }
 
     @Override
     public void focusLost(FocusEvent e) {
-        // Analizar evento
-        
-        // LLamar a algún método de GUI
+        gui.procesarFocoPerdido(e);
     }
-
 }

@@ -15,20 +15,26 @@
  */
 package org.japo.java.events;
 
-import java.awt.event.MouseAdapter;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import org.japo.java.forms.GUI;
 
 /**
  *
  * @author José A. Pacheco Ondoño - joanpaon@gmail.com
  */
-public class MEM extends MouseAdapter {
+public class MWEM implements MouseWheelListener {
 
     // Referencia al GUI
     private final GUI gui;
 
     // Constructor
-    public MEM(GUI gui) {
+    public MWEM(GUI gui) {
         this.gui = gui;
+    }
+
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent e) {
+
     }
 }

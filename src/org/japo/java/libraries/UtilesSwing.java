@@ -45,9 +45,9 @@ import javax.swing.event.ChangeListener;
 public class UtilesSwing {
 
     // Perfiles LnF
-    public static final String LNF_GTK = "GTK";
     public static final String LNF_WINDOWS = "Windows";
-    public static final String LNF_MOTIF = "Motif";
+    public static final String LNF_WINDOWS_CLASSIC = "Windows Classic";
+    public static final String LNF_MOTIF = "CDE/Motif";
     public static final String LNF_METAL = "Metal";
     public static final String LNF_NIMBUS = "Nimbus";
 

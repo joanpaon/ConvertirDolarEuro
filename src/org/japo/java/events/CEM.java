@@ -15,20 +15,26 @@
  */
 package org.japo.java.events;
 
-import java.awt.event.MouseAdapter;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.japo.java.forms.GUI;
 
 /**
  *
  * @author José A. Pacheco Ondoño - joanpaon@gmail.com
  */
-public class MEM extends MouseAdapter {
+public class CEM implements ChangeListener {
 
     // Referencia al GUI
     private final GUI gui;
 
     // Constructor
-    public MEM(GUI gui) {
+    public CEM(GUI gui) {
         this.gui = gui;
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+
     }
 }

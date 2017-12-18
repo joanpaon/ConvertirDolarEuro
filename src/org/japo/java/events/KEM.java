@@ -1,4 +1,4 @@
-/*
+/* 
  * Copyright 2017 José A. Pacheco Ondoño - joanpaon@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,11 +24,11 @@ import org.japo.java.forms.GUI;
  */
 public class KEM extends KeyAdapter {
 
-    // Referencia al igu
+    // Referencia al GUI
     private final GUI gui;
 
+    // Constructor
     public KEM(GUI gui) {
         this.gui = gui;
     }
-
 }
