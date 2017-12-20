@@ -154,7 +154,7 @@ public class GUI extends JFrame {
             if (ae.getSource().equals(txfEur)) {
                 convertirE2D(txfEur, txfDol, factor);     // E >> D
             } else {
-                convertirD2E(txfDol, txfEur, factor);     // D >> E
+                convertirD2E(txfDol, txfEur, 1 / factor); // D >> E
             }
 
             // Cursor al Principio
@@ -205,7 +205,7 @@ public class GUI extends JFrame {
 
             // Obtiene Dólares y Euros
             double dinDol = Double.parseDouble(txtDol);
-            double dinEur = dinDol / factor;
+            double dinEur = dinDol * factor;
 
             // Formatea Euros y Dólares
             txtDol = String.format(Locale.ENGLISH, "%.2f", dinDol);
