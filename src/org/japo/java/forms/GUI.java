@@ -48,7 +48,7 @@ public class GUI extends JFrame {
     public static final String PRP_FACTOR = "factor";
 
     // Valores por Defecto
-    public static final String DEF_LOOK_AND_FEEL = UtilesSwing.LNF_NIMBUS;
+    public static final String DEF_LOOK_AND_FEEL = UtilesSwing.LNF_WINDOWS;
     public static final String DEF_FAVICON = "img/favicon.png";
     public static final String DEF_BACKGROUND = "img/background.jpg";
     public static final String DEF_FACTOR = "1.20";
