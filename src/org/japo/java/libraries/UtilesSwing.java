@@ -15,6 +15,8 @@
  */
 package org.japo.java.libraries;
 
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.Image;
@@ -27,6 +29,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -52,7 +55,7 @@ public class UtilesSwing {
     public static final String LNF_NIMBUS = "Nimbus";
 
     // Cerrar programa
-    public static void terminarPrograma(JFrame f) {
+    public static final void terminarPrograma(JFrame f) {
         // Oculta la ventana
         f.setVisible(false);
 
@@ -64,7 +67,7 @@ public class UtilesSwing {
     }
 
     // Establecer LnF
-    public static boolean establecerLnF(String lnf) {
+    public static final boolean establecerLnF(String lnf) {
         // Semáforo
         boolean procesoOK = false;
 
@@ -89,7 +92,7 @@ public class UtilesSwing {
     }
 
     // Escalar/Asignar Image > Etiqueta
-    public static boolean asignarImagenEscalada(JLabel lblImagen, Image imgOriginal) {
+    public static final boolean asignarImagenEscalada(JLabel lblImagen, Image imgOriginal) {
         // Semáforo
         boolean procesoOK = false;
 
@@ -118,7 +121,7 @@ public class UtilesSwing {
     }
 
     // Obtiene el texto copiado al portapapeles
-    public static String obtenerTextoPortapapeles() {
+    public static final String obtenerTextoPortapapeles() {
         // Referencia al texto del portapapeles
         String result = "";
 
@@ -141,7 +144,7 @@ public class UtilesSwing {
     }
 
     // Coloca texto en el portapapeles
-    public static boolean ponerTextoPortapapeles(String texto, ClipboardOwner propietario) {
+    public static final boolean ponerTextoPortapapeles(String texto, ClipboardOwner propietario) {
         // Semáforo
         boolean procesoOK = false;
 
@@ -166,7 +169,7 @@ public class UtilesSwing {
     }
 
     // Cambiar valor sin disparar Eventos de Ajuste
-    public static void ajustarValorDeslizador(JSlider sldActual, int valor) {
+    public static final void ajustarValorDeslizador(JSlider sldActual, int valor) {
         // Captura los escuchadores del deslizador
         ChangeListener[] lista = sldActual.getChangeListeners();
 
@@ -185,7 +188,7 @@ public class UtilesSwing {
     }
 
     // Cambiar valor sin disparar Eventos de Ajuste
-    public static void ajustarValorCambiador(JSpinner spnActual, int valor) {
+    public static final void ajustarValorCambiador(JSpinner spnActual, int valor) {
         // Captura los escuchadores del cambiador
         ChangeListener[] lista = spnActual.getChangeListeners();
 
@@ -204,13 +207,13 @@ public class UtilesSwing {
     }
 
     // Tipografias disponibles en el sistema
-    public static String[] obtenerTipografiasSistema() {
+    public static final String[] obtenerTipografiasSistema() {
         return GraphicsEnvironment.
                 getLocalGraphicsEnvironment().
                 getAvailableFontFamilyNames();
     }
 
-    public static void seleccionarElementoCombo(JComboBox<String> cbbActual, String item) {
+    public static final void seleccionarElementoCombo(JComboBox<String> cbbActual, String item) {
         // Captura los escuchadores del combo
         ActionListener[] lista = cbbActual.getActionListeners();
 
@@ -229,7 +232,7 @@ public class UtilesSwing {
     }
 
     // Asignar Favicon Ventana
-    public static void establecerFavicon(JFrame ventana, String rutaFavicon) {
+    public static final void establecerFavicon(JFrame ventana, String rutaFavicon) {
         try {
             // Ruta Favicon > URL Favicon
             URL urlICN = ClassLoader.getSystemResource(rutaFavicon);
@@ -239,5 +242,25 @@ public class UtilesSwing {
         } catch (Exception e) {
             System.out.println("ERROR: Instalación del icono de la ventana");
         }
+    }
+
+    // Cargar Fuente TTF
+    public static final Font cargarFuente(String rutaFuente) {
+        // Referencia a la fuente
+        Font fntActual;
+
+        // Cargar Fuente
+        try {
+            // Crea Acceso al Fichero
+            InputStream is = ClassLoader.getSystemResourceAsStream(rutaFuente);
+
+            // Instancia fuente
+            fntActual = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(Font.PLAIN, 12f);
+        } catch (FontFormatException | IOException e) {
+            fntActual = new Font("SansSerif", Font.PLAIN, 12);
+        }
+
+        // Devuelve fuente
+        return fntActual;
     }
 }

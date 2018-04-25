@@ -50,7 +50,7 @@ public class GUI extends JFrame {
     // Valores por Defecto
     public static final String DEF_LOOK_AND_FEEL = UtilesSwing.LNF_NIMBUS;
     public static final String DEF_FAVICON = "img/favicon.png";
-    public static final String DEF_BACKGROUND = "img/dolar-euro.jpg";
+    public static final String DEF_BACKGROUND = "img/background.jpg";
     public static final String DEF_FACTOR = "1.20";
 
     // Referencias
@@ -94,7 +94,7 @@ public class GUI extends JFrame {
         txfEur.setPreferredSize(new Dimension(200, 50));
         txfEur.setHorizontalAlignment(JTextField.RIGHT);
         txfEur.setBackground(Color.ORANGE);
-        txfEur.setCaretPosition(0);
+        txfEur.setSelectionStart(0);
         txfEur.addActionListener(new AEM(this));
         txfEur.addFocusListener(new FEM(this));
 
@@ -108,8 +108,8 @@ public class GUI extends JFrame {
         txfDol.addFocusListener(new FEM(this));
 
         // Imagen de Fondo
-        String rutaImg = prp.getProperty(PRP_BACKGROUND, DEF_BACKGROUND);
-        URL urlImg = ClassLoader.getSystemResource(rutaImg);
+        String pthImg = prp.getProperty(PRP_BACKGROUND, DEF_BACKGROUND);
+        URL urlImg = ClassLoader.getSystemResource(pthImg);
         Image img = new ImageIcon(urlImg).getImage();
 
         // Panel Principal
@@ -157,8 +157,8 @@ public class GUI extends JFrame {
                 convertirD2E(txfDol, txfEur, 1 / factor); // D >> E
             }
 
-            // Cursor al Principio
-            ((JTextField) (ae.getSource())).setCaretPosition(0);
+            // Selección
+            ((JTextField) (ae.getSource())).setSelectionStart(0);
         } catch (NumberFormatException e) {
             // Gestión de Error
             if (ae.getSource().equals(txfEur)) {
@@ -228,7 +228,7 @@ public class GUI extends JFrame {
         txfAct.setBackground(Color.ORANGE);
 
         // Mover Cursor - PRINCIPIO
-        txfAct.setCaretPosition(0);
+        txfAct.setSelectionStart(0);
     }
 
     // Gestión Foco Perdido

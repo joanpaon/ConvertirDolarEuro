@@ -1,5 +1,5 @@
-/* 
- * Copyright 2017 José A. Pacheco Ondoño - joanpaon@gmail.com.
+/*
+ * Copyright 2016 José A. Pacheco Ondoño - joanpaon@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ public class UtilesEntrada {
     }
 
     // Devuelve un entero entre limites introducido por teclado
-    public static final int leerEnteroRango(String msgUsr, String msgErr, int min, int max) {
+    public static final int leerEntero(String msgUsr, String msgErr, int min, int max) {
         // Numero a devolver
         int dato;
 
@@ -78,9 +78,35 @@ public class UtilesEntrada {
         return dato;
     }
 
+    // Devuelve un entero introducido por teclado de entre una lista de posibles valores
+    public static final int leerEntero(String msgUsr, String msgErr, int lista[]) {
+        // Numero a devolver
+        int dato;
+
+        // Semaforo validacion
+        boolean datoOK;
+
+        // Bucle Validacion
+        do {
+            // Introducir Entero
+            dato = UtilesEntrada.leerEntero(msgUsr, msgErr);
+
+            // Validar Entero
+            datoOK = UtilesArrays.buscar(lista, dato) > -1;
+
+            // Mensaje de error
+            if (!datoOK) {
+                System.out.println(msgErr);
+            }
+        } while (!datoOK);
+
+        // Devolver número
+        return dato;
+    }
+
     // Devuelve un número de DNI
     public static final int leerNumeroDNI(String msgUsr, String msgErr) {
-        return leerEnteroRango(msgUsr, msgErr, UtilesDNI.NUM_MIN, UtilesDNI.NUM_MAX);
+        return leerEntero(msgUsr, msgErr, UtilesDNI.NUM_MIN, UtilesDNI.NUM_MAX);
     }
 
     // Devuelve un caracter introducido por teclado
@@ -98,6 +124,34 @@ public class UtilesEntrada {
 
                 // Marca el semáforo
                 lecturaOK = true;
+            } catch (Exception e) {
+                System.out.println(msgErr);
+            }
+        } while (!lecturaOK);
+
+        // Devolver dato
+        return dato;
+    }
+
+    // Devuelve una opción
+    public static final char leerOpcion(String opciones, String msgUsr, String msgErr) {
+        // Dato a introducir
+        char dato = 0;
+
+        // Proceso de lectura
+        boolean lecturaOK = false;
+        do {
+            try {
+                // Entrada dato
+                System.out.print(msgUsr);
+                dato = SCN.nextLine().charAt(0);
+
+                // Analisis Dato
+                if (opciones.contains(dato + "")) {
+                    lecturaOK = true;
+                } else {
+                    System.out.println(msgErr);
+                }
             } catch (Exception e) {
                 System.out.println(msgErr);
             }
@@ -140,5 +194,11 @@ public class UtilesEntrada {
 
         // Devolver dato
         return "" + num + ctr;
+    }
+
+    // Devuelve el Texto introducido
+    public static final String leerTexto(String msgUsr) {
+        System.out.print(msgUsr);
+        return SCN.nextLine();
     }
 }
