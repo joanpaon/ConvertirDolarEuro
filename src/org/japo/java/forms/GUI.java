@@ -53,6 +53,10 @@ public class GUI extends JFrame {
     public static final String DEF_BACKGROUND = "img/background.jpg";
     public static final String DEF_FACTOR = "1.20";
 
+    // Colores
+    private static final Color COLOR_FOCO_GANADO = Color.ORANGE;
+    private static final Color COLOR_FOCO_PERDIDO = Color.LIGHT_GRAY;
+
     // Referencias
     private Properties prp;
     private JLabel lblDol;
@@ -93,7 +97,7 @@ public class GUI extends JFrame {
         txfEur.setFont(new Font("Consolas", Font.PLAIN, 32));
         txfEur.setPreferredSize(new Dimension(200, 50));
         txfEur.setHorizontalAlignment(JTextField.RIGHT);
-        txfEur.setBackground(Color.ORANGE);
+        txfEur.setBackground(COLOR_FOCO_GANADO);
         txfEur.setSelectionStart(0);
         txfEur.addActionListener(new AEM(this));
         txfEur.addFocusListener(new FEM(this));
@@ -103,7 +107,7 @@ public class GUI extends JFrame {
         txfDol.setFont(new Font("Consolas", Font.PLAIN, 32));
         txfDol.setPreferredSize(new Dimension(200, 50));
         txfDol.setHorizontalAlignment(JTextField.RIGHT);
-        txfDol.setBackground(Color.LIGHT_GRAY);
+        txfDol.setBackground(COLOR_FOCO_PERDIDO);
         txfDol.addActionListener(new AEM(this));
         txfDol.addFocusListener(new FEM(this));
 
@@ -170,53 +174,45 @@ public class GUI extends JFrame {
     }
 
     // E >> D
-    private void convertirE2D(JTextField txfEur, JTextField txfDol, double factor) {
-        try {
-            // Campo de texto Euros > Texto
-            String txtEur = txfEur.getText();
+    private void convertirE2D(JTextField txfEur, JTextField txfDol, double factor) throws NumberFormatException {
+        // Campo de texto Euros > Texto
+        String txtEur = txfEur.getText().trim();
 
-            // Formato Fraccionario SPANISH > ENGLISH 
-            txtEur = txtEur.replace(',', '.');
+        // Formato Fraccionario SPANISH > ENGLISH 
+        txtEur = txtEur.replace(',', '.');
 
-            // Obtiene Euros y Dólares
-            double dinEur = Double.parseDouble(txtEur);
-            double dinDol = dinEur * factor;
+        // Obtiene Euros y Dólares
+        double dinEur = Double.parseDouble(txtEur);
+        double dinDol = dinEur * factor;
 
-            // Formatea Euros y Dólares
-            txtEur = String.format(Locale.ENGLISH, "%.2f", dinEur);
-            String txtDol = String.format(Locale.ENGLISH, "%.2f", dinDol);
+        // Formatea Euros y Dólares
+        txtEur = String.format(Locale.ENGLISH, "%.2f", dinEur);
+        String txtDol = String.format(Locale.ENGLISH, "%.2f", dinDol);
 
-            // Actualiza Campos de Texto
-            txfEur.setText(txtEur);
-            txfDol.setText(txtDol);
-        } catch (NumberFormatException e) {
-            txfDol.setText("???");
-        }
+        // Actualiza Campos de Texto
+        txfEur.setText(txtEur);
+        txfDol.setText(txtDol);
     }
 
     // D >> E
-    private void convertirD2E(JTextField txfDol, JTextField txfEur, double factor) {
-        try {
-            // Campo de Texto - Dólares > Texto
-            String txtDol = txfDol.getText();
+    private void convertirD2E(JTextField txfDol, JTextField txfEur, double factor) throws NumberFormatException {
+        // Campo de Texto - Dólares > Texto
+        String txtDol = txfDol.getText().trim();
 
-            // Formato Fraccionario SPANISH > ENGLISH 
-            txtDol = txtDol.replace(',', '.');
+        // Formato Fraccionario SPANISH > ENGLISH 
+        txtDol = txtDol.replace(',', '.');
 
-            // Obtiene Dólares y Euros
-            double dinDol = Double.parseDouble(txtDol);
-            double dinEur = dinDol * factor;
+        // Obtiene Dólares y Euros
+        double dinDol = Double.parseDouble(txtDol);
+        double dinEur = dinDol * factor;
 
-            // Formatea Euros y Dólares
-            txtDol = String.format(Locale.ENGLISH, "%.2f", dinDol);
-            String txtEur = String.format(Locale.ENGLISH, "%.2f", dinEur);
+        // Formatea Euros y Dólares
+        txtDol = String.format(Locale.ENGLISH, "%.2f", dinDol);
+        String txtEur = String.format(Locale.ENGLISH, "%.2f", dinEur);
 
-            // Actualiza Campos de Texto
-            txfDol.setText(txtDol);
-            txfEur.setText(txtEur);
-        } catch (NumberFormatException e) {
-            txfEur.setText("???");
-        }
+        // Actualiza Campos de Texto
+        txfDol.setText(txtDol);
+        txfEur.setText(txtEur);
     }
 
     // Gestión Foco Ganado
@@ -225,7 +221,7 @@ public class GUI extends JFrame {
         JTextField txfAct = (JTextField) e.getSource();
 
         // Color Fondo - GANADO
-        txfAct.setBackground(Color.ORANGE);
+        txfAct.setBackground(COLOR_FOCO_GANADO);
 
         // Mover Cursor - PRINCIPIO
         txfAct.setSelectionStart(0);
@@ -237,6 +233,6 @@ public class GUI extends JFrame {
         JTextField txfAct = (JTextField) e.getSource();
 
         // Color Fondo - PERDIDO
-        txfAct.setBackground(Color.LIGHT_GRAY);
+        txfAct.setBackground(COLOR_FOCO_PERDIDO);
     }
 }
