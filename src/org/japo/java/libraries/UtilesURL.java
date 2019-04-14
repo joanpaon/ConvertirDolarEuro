@@ -13,36 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.japo.java.main;
-
-import java.util.Properties;
-import javax.swing.SwingUtilities;
-import org.japo.java.forms.GUI;
-import org.japo.java.libraries.UtilesApp;
+package org.japo.java.libraries;
 
 /**
  *
  * @author José A. Pacheco Ondoño - joanpaon@gmail.com
  */
-public final class Main {
+public final class UtilesURL {
 
-    // Constructor Oculto
-    private Main() {
+    // Expresión Regular
+    public static final String ER_URL = "^(https?://)?(([\\w!~*'().&=+$%-]+: )?[\\w!~*'().&=+$%-]+@)?(([0-9]{1,3}\\.){3}[0-9]{1,3}|([\\w!~*'()-]+\\.)*([\\w^-][\\w-]{0,61})?[\\w]\\.[a-z]{2,6})(:[0-9]{1,4})?((/*)|(/+[\\w!~*'().;?:@&=+$,%#-]+)+/*)$";
 
-    }
-
-    // Entrada a la aplicación
-    public static void main(String[] args) {
-        // Lanzar GUI
-        SwingUtilities.invokeLater(() -> {
-            // Propiedades App
-            Properties prp = UtilesApp.importarPropiedadesRecurso();
-
-            // Instanciar GUI
-            GUI gui = new GUI(prp);
-
-            // Mostrar GUI
-            gui.setVisible(true);
-        });
+    // Validar URL
+    public static final boolean validarURL(String url) {
+        return UtilesValidacion.validar(url, ER_URL);
     }
 }

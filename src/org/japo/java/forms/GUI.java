@@ -1,5 +1,5 @@
 /* 
- * Copyright 2017 José A. Pacheco Ondoño - joanpaon@gmail.com.
+ * Copyright 2019 José A. Pacheco Ondoño - joanpaon@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +22,8 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
-import java.net.URL;
 import java.util.Locale;
 import java.util.Properties;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -39,19 +37,27 @@ import org.japo.java.libraries.UtilesSwing;
  *
  * @author José A. Pacheco Ondoño - joanpaon@gmail.com
  */
-public class GUI extends JFrame {
+public final class GUI extends JFrame {
 
     // Propiedades App
-    public static final String PRP_LOOK_AND_FEEL = "look_and_feel";
-    public static final String PRP_FAVICON = "favicon";
-    public static final String PRP_BACKGROUND = "background";
-    public static final String PRP_FACTOR = "factor";
+    public static final String PRP_FAVICON_RESOURCE = "favicon_resource";
+    public static final String PRP_FONT_RESOURCE = "font_resource";
+    public static final String PRP_FORM_HEIGHT = "form_height";
+    public static final String PRP_FORM_WIDTH = "form_width";
+    public static final String PRP_FORM_TITLE = "form_title";
+    public static final String PRP_IMAGE_RESOURCE = "image_resource";
+    public static final String PRP_LOOK_AND_FEEL_PROFILE = "look_and_feel_profile";
+    public static final String PRP_FACTOR_CONVERSION = "factor_conversion";
 
     // Valores por Defecto
-    public static final String DEF_LOOK_AND_FEEL = UtilesSwing.LNF_WINDOWS;
-    public static final String DEF_FAVICON = "img/favicon.png";
-    public static final String DEF_BACKGROUND = "img/background.jpg";
-    public static final String DEF_FACTOR = "1.20";
+    public static final String DEF_FAVICON_RESOURCE = "img/favicon.png";
+    public static final String DEF_FONT_FALLBACK_NAME = Font.SERIF;
+    public static final String DEF_FONT_SYSTEM_NAME = "Kaufmann BT";
+    public static final int DEF_FORM_HEIGHT = 300;
+    public static final int DEF_FORM_WIDTH = 500;
+    public static final String DEF_FORM_TITLE = "Swing Manual App";
+    public static final String DEF_LOOK_AND_FEEL_PROFILE = UtilesSwing.LNF_WINDOWS_PROFILE;
+    public static final String DEF_FACTOR_CONVERSION = "1.2"; // E > D
 
     // Colores
     private static final Color COLOR_FOCO_GANADO = Color.ORANGE;
@@ -59,15 +65,24 @@ public class GUI extends JFrame {
 
     // Referencias
     private Properties prp;
+
+    // Componentes
     private JLabel lblDol;
     private JLabel lblEur;
     private JTextField txfDol;
     private JTextField txfEur;
+    private JPanel pnlPpal;
+
+    // Imágenes
+    private Image imgSample;
 
     // Constructor
     public GUI(Properties prp) {
+        // Conectar Referencia
+        this.prp = prp;
+
         // Inicialización Anterior
-        initBefore(prp);
+        initBefore();
 
         // Creación Interfaz
         initComponents();
@@ -78,6 +93,10 @@ public class GUI extends JFrame {
 
     // Construcción - GUI
     private void initComponents() {
+        // Imágenes
+        imgSample = UtilesSwing.importarImagenRecurso(
+                prp.getProperty(PRP_IMAGE_RESOURCE));
+
         // Etiqueta Euro
         lblEur = new JLabel("Euros");
         lblEur.setFont(new Font("Calibri", Font.BOLD, 32));
@@ -99,8 +118,6 @@ public class GUI extends JFrame {
         txfEur.setHorizontalAlignment(JTextField.RIGHT);
         txfEur.setBackground(COLOR_FOCO_GANADO);
         txfEur.setSelectionStart(0);
-        txfEur.addActionListener(new AEM(this));
-        txfEur.addFocusListener(new FEM(this));
 
         // Campo de Dólares
         txfDol = new JTextField("0.00");
@@ -108,16 +125,9 @@ public class GUI extends JFrame {
         txfDol.setPreferredSize(new Dimension(200, 50));
         txfDol.setHorizontalAlignment(JTextField.RIGHT);
         txfDol.setBackground(COLOR_FOCO_PERDIDO);
-        txfDol.addActionListener(new AEM(this));
-        txfDol.addFocusListener(new FEM(this));
-
-        // Imagen de Fondo
-        String pthImg = prp.getProperty(PRP_BACKGROUND, DEF_BACKGROUND);
-        URL urlImg = ClassLoader.getSystemResource(pthImg);
-        Image img = new ImageIcon(urlImg).getImage();
 
         // Panel Principal
-        JPanel pnlPpal = new BackgroundPanel(img);
+        pnlPpal = new BackgroundPanel(imgSample);
         pnlPpal.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 54));
         pnlPpal.add(lblEur);
         pnlPpal.add(txfEur);
@@ -126,33 +136,45 @@ public class GUI extends JFrame {
 
         // Ventana Principal
         setContentPane(pnlPpal);
-        setTitle("Swing Manual #07");
+        setTitle(prp.getProperty(PRP_FORM_TITLE, DEF_FORM_TITLE));
+        try {
+            int height = Integer.parseInt(prp.getProperty(PRP_FORM_HEIGHT));
+            int width = Integer.parseInt(prp.getProperty(PRP_FORM_WIDTH));
+            setSize(width, height);
+        } catch (NumberFormatException e) {
+            setSize(DEF_FORM_WIDTH, DEF_FORM_HEIGHT);
+        }
         setResizable(false);
-        setSize(500, 300);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     // Inicialización Anterior    
-    private void initBefore(Properties prp) {
-        // Memorizar Referencia
-        this.prp = prp;
-
+    private void initBefore() {
         // Establecer LnF
-        UtilesSwing.establecerLnF(prp.getProperty(PRP_LOOK_AND_FEEL, DEF_LOOK_AND_FEEL));
+        UtilesSwing.establecerLnFProfile(prp.getProperty(
+                PRP_LOOK_AND_FEEL_PROFILE, DEF_LOOK_AND_FEEL_PROFILE));
     }
 
     // Inicialización Posterior
     private void initAfter() {
         // Establecer Favicon
-        UtilesSwing.establecerFavicon(this, prp.getProperty(PRP_FAVICON, DEF_FAVICON));
+        UtilesSwing.establecerFavicon(this, prp.getProperty(
+                PRP_FAVICON_RESOURCE, DEF_FAVICON_RESOURCE));
+
+        // Registrar Gestores de Eventos
+        txfEur.addActionListener(new AEM(this));
+        txfEur.addFocusListener(new FEM(this));
+        txfDol.addActionListener(new AEM(this));
+        txfDol.addFocusListener(new FEM(this));
     }
 
     // Evento de Accion - Respuesta
-    public void procesarAccion(ActionEvent ae) {
+    public final void procesarAccion(ActionEvent ae) {
         try {
             // Factor Conversión E > D
-            double factor = Double.parseDouble(prp.getProperty(PRP_FACTOR, DEF_FACTOR));
+            double factor = Double.parseDouble(
+                    prp.getProperty(PRP_FACTOR_CONVERSION, DEF_FACTOR_CONVERSION));
 
             // Tipo de Conversión
             if (ae.getSource().equals(txfEur)) {
@@ -216,7 +238,7 @@ public class GUI extends JFrame {
     }
 
     // Gestión Foco Ganado
-    public void procesarFocoGanado(FocusEvent e) {
+    public final void procesarFocoGanado(FocusEvent e) {
         // Campo de Texto - Evento
         JTextField txfAct = (JTextField) e.getSource();
 
@@ -228,7 +250,7 @@ public class GUI extends JFrame {
     }
 
     // Gestión Foco Perdido
-    public void procesarFocoPerdido(FocusEvent e) {
+    public final void procesarFocoPerdido(FocusEvent e) {
         // Campo de Texto - Evento
         JTextField txfAct = (JTextField) e.getSource();
 

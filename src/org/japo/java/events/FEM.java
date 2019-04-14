@@ -23,7 +23,7 @@ import org.japo.java.forms.GUI;
  *
  * @author José A. Pacheco Ondoño - joanpaon@gmail.com
  */
-public class FEM implements FocusListener {
+public final class FEM implements FocusListener {
 
     // Referencia al GUI
     private final GUI gui;

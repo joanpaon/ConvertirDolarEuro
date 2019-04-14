@@ -23,11 +23,12 @@ import org.japo.java.forms.GUI;
  *
  * @author José A. Pacheco Ondoño - joanpaon@gmail.com
  */
-public class AEM implements ActionListener {
+public final class AEM implements ActionListener {
 
     // Referencia al GUI
     private final GUI gui;
 
+    // Constructor
     public AEM(GUI gui) {
         this.gui = gui;
     }

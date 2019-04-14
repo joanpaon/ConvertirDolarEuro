@@ -1,5 +1,5 @@
 /* 
- * Copyright 2017 José A. Pacheco Ondoño - joanpaon@gmail.com.
+ * Copyright 2019 José A. Pacheco Ondoño - joanpaon@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,16 +19,11 @@ import java.awt.Graphics;
 import java.awt.Image;
 import javax.swing.JPanel;
 
-/**
- *
- * @author José A. Pacheco Ondoño - joanpaon@gmail.com
- */
-public class BackgroundPanel extends JPanel {
+public final class BackgroundPanel extends JPanel {
 
-    // Referencia Imagen Fondo
+    // Referencia a la imagen de fondo
     private Image img;
 
-    // Constructor parametrizado
     public BackgroundPanel(Image img) {
         if (img != null) {
             this.img = img;
@@ -41,14 +36,14 @@ public class BackgroundPanel extends JPanel {
         g.drawImage(
                 img,            // Objeto Image - Imagen de fondo para el panel
                 0, 0,           // X e Y donde se va a insertar la imagen
-                getWidth() - 1, // Ancho de la imagen - Ancho del panel
-                getHeight() - 1,// Alto de la imagen - Alto del panel
+                getWidth(),     // Ancho de la imagen - Ancho del panel
+                getHeight(),    // Alto de la imagen - Alto del panel
                 this);          // Dónde se dibujará la imagen - Panel
 
-        // Panel Trasparente - Mostrar Imagen
+        // Panel opaco - Muestra imagen
         setOpaque(false);
 
-        // Dibujar Panel
+        // Pinta la imagen
         super.paint(g);
     }
 }

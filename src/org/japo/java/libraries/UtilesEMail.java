@@ -13,36 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.japo.java.main;
-
-import java.util.Properties;
-import javax.swing.SwingUtilities;
-import org.japo.java.forms.GUI;
-import org.japo.java.libraries.UtilesApp;
+package org.japo.java.libraries;
 
 /**
  *
  * @author José A. Pacheco Ondoño - joanpaon@gmail.com
  */
-public final class Main {
+public final class UtilesEMail {
 
-    // Constructor Oculto
-    private Main() {
+    // Expresión Regular
+    public static final String ER_EMAIL = "[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*";
 
-    }
-
-    // Entrada a la aplicación
-    public static void main(String[] args) {
-        // Lanzar GUI
-        SwingUtilities.invokeLater(() -> {
-            // Propiedades App
-            Properties prp = UtilesApp.importarPropiedadesRecurso();
-
-            // Instanciar GUI
-            GUI gui = new GUI(prp);
-
-            // Mostrar GUI
-            gui.setVisible(true);
-        });
+    // Validar email
+    public static final boolean validarEMail(String email) {
+        return UtilesValidacion.validar(email, ER_EMAIL);
     }
 }
