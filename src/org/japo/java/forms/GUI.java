@@ -39,32 +39,12 @@ import org.japo.java.libraries.UtilesSwing;
  */
 public final class GUI extends JFrame {
 
-    // Propiedades App
-    public static final String PRP_FAVICON_RESOURCE = "favicon_resource";
-    public static final String PRP_FONT_RESOURCE = "font_resource";
-    public static final String PRP_FORM_HEIGHT = "form_height";
-    public static final String PRP_FORM_WIDTH = "form_width";
-    public static final String PRP_FORM_TITLE = "form_title";
-    public static final String PRP_IMAGE_RESOURCE = "image_resource";
-    public static final String PRP_LOOK_AND_FEEL_PROFILE = "look_and_feel_profile";
-    public static final String PRP_FACTOR_CONVERSION = "factor_conversion";
-
-    // Valores por Defecto
-    public static final String DEF_FAVICON_RESOURCE = "img/favicon.png";
-    public static final String DEF_FONT_FALLBACK_NAME = Font.SERIF;
-    public static final String DEF_FONT_SYSTEM_NAME = "Kaufmann BT";
-    public static final int DEF_FORM_HEIGHT = 300;
-    public static final int DEF_FORM_WIDTH = 500;
-    public static final String DEF_FORM_TITLE = "Swing Manual App";
-    public static final String DEF_LOOK_AND_FEEL_PROFILE = UtilesSwing.LNF_WINDOWS_PROFILE;
-    public static final String DEF_FACTOR_CONVERSION = "1.2"; // E > D
-
     // Colores
     private static final Color COLOR_FOCO_GANADO = Color.ORANGE;
     private static final Color COLOR_FOCO_PERDIDO = Color.LIGHT_GRAY;
 
     // Referencias
-    private Properties prp;
+    private final Properties prp;
 
     // Componentes
     private JLabel lblDol;
@@ -73,8 +53,11 @@ public final class GUI extends JFrame {
     private JTextField txfEur;
     private JPanel pnlPpal;
 
+    // Fuentes
+    private Font fntDisplay;
+
     // Imágenes
-    private Image imgSample;
+    private Image imgBack;
 
     // Constructor
     public GUI(Properties prp) {
@@ -93,27 +76,22 @@ public final class GUI extends JFrame {
 
     // Construcción - GUI
     private void initComponents() {
-        // Imágenes
-        imgSample = UtilesSwing.importarImagenRecurso(
-                prp.getProperty(PRP_IMAGE_RESOURCE));
-
         // Etiqueta Euro
         lblEur = new JLabel("Euros");
-        lblEur.setFont(new Font("Calibri", Font.BOLD, 32));
+        lblEur.setFont(new Font(Font.DIALOG, Font.BOLD, 32));
         lblEur.setPreferredSize(new Dimension(200, 50));
         lblEur.setOpaque(true);
         lblEur.setBackground(new Color(255, 255, 255, 200));
 
         // Etiqueta Dólar
         lblDol = new JLabel("Dólares");
-        lblDol.setFont(new Font("Calibri", Font.BOLD, 32));
+        lblDol.setFont(new Font(Font.DIALOG, Font.BOLD, 32));
         lblDol.setPreferredSize(new Dimension(200, 50));
         lblDol.setOpaque(true);
         lblDol.setBackground(new Color(255, 255, 255, 200));
 
         // Campo de Euros
         txfEur = new JTextField("0.00");
-        txfEur.setFont(new Font("Consolas", Font.PLAIN, 32));
         txfEur.setPreferredSize(new Dimension(200, 50));
         txfEur.setHorizontalAlignment(JTextField.RIGHT);
         txfEur.setBackground(COLOR_FOCO_GANADO);
@@ -121,13 +99,11 @@ public final class GUI extends JFrame {
 
         // Campo de Dólares
         txfDol = new JTextField("0.00");
-        txfDol.setFont(new Font("Consolas", Font.PLAIN, 32));
         txfDol.setPreferredSize(new Dimension(200, 50));
         txfDol.setHorizontalAlignment(JTextField.RIGHT);
         txfDol.setBackground(COLOR_FOCO_PERDIDO);
 
         // Panel Principal
-        pnlPpal = new BackgroundPanel(imgSample);
         pnlPpal.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 54));
         pnlPpal.add(lblEur);
         pnlPpal.add(txfEur);
@@ -135,32 +111,43 @@ public final class GUI extends JFrame {
         pnlPpal.add(txfDol);
 
         // Ventana Principal
-        setContentPane(pnlPpal);
-        setTitle(prp.getProperty(PRP_FORM_TITLE, DEF_FORM_TITLE));
-        try {
-            int height = Integer.parseInt(prp.getProperty(PRP_FORM_HEIGHT));
-            int width = Integer.parseInt(prp.getProperty(PRP_FORM_WIDTH));
-            setSize(width, height);
-        } catch (NumberFormatException e) {
-            setSize(DEF_FORM_WIDTH, DEF_FORM_HEIGHT);
-        }
         setResizable(false);
-        setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     // Inicialización Anterior    
     private void initBefore() {
         // Establecer LnF
-        UtilesSwing.establecerLnFProfile(prp.getProperty(
-                PRP_LOOK_AND_FEEL_PROFILE, DEF_LOOK_AND_FEEL_PROFILE));
+        UtilesSwing.establecerLnFProfile(prp.getProperty("look_and_feel_profile"));
+
+        // Fuentes
+        fntDisplay = UtilesSwing.generarFuenteRecurso(prp.getProperty("font_resource"));
+
+        // Imágenes
+        imgBack = UtilesSwing.importarImagenRecurso(prp.getProperty("img_back_resource"));
+
+        // Panel Principal
+        pnlPpal = new BackgroundPanel(imgBack);
+
+        // Ventana Principal
+        setContentPane(pnlPpal);
     }
 
     // Inicialización Posterior
     private void initAfter() {
         // Establecer Favicon
-        UtilesSwing.establecerFavicon(this, prp.getProperty(
-                PRP_FAVICON_RESOURCE, DEF_FAVICON_RESOURCE));
+        UtilesSwing.establecerFavicon(this, prp.getProperty("img_favicon_resource"));
+
+        // Fuentes
+        txfEur.setFont(fntDisplay.deriveFont(Font.BOLD, 32f));
+        txfDol.setFont(fntDisplay.deriveFont(Font.BOLD, 32f));
+
+        // Ventana Principal
+        setTitle(prp.getProperty("form_title"));
+        int width = Integer.parseInt(prp.getProperty("form_width"));
+        int height = Integer.parseInt(prp.getProperty("form_height"));
+        setSize(width, height);
+        setLocationRelativeTo(null);
 
         // Registrar Gestores de Eventos
         txfEur.addActionListener(new AEM(this));
@@ -173,8 +160,7 @@ public final class GUI extends JFrame {
     public final void procesarAccion(ActionEvent ae) {
         try {
             // Factor Conversión E > D
-            double factor = Double.parseDouble(
-                    prp.getProperty(PRP_FACTOR_CONVERSION, DEF_FACTOR_CONVERSION));
+            double factor = Double.parseDouble(prp.getProperty("factor_conversion"));
 
             // Tipo de Conversión
             if (ae.getSource().equals(txfEur)) {
