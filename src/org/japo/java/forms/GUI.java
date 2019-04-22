@@ -70,7 +70,7 @@ public final class GUI extends JFrame {
         // Creación Interfaz
         initComponents();
 
-        // Inicializacion Posterior
+        // Inicialización Posterior
         initAfter();
     }
 
@@ -157,70 +157,46 @@ public final class GUI extends JFrame {
     }
 
     // Evento de Accion - Respuesta
-    public final void procesarAccion(ActionEvent ae) {
-        try {
-            // Factor Conversión E > D
-            double factor = Double.parseDouble(prp.getProperty("factor_conversion"));
-
-            // Tipo de Conversión
-            if (ae.getSource().equals(txfEur)) {
-                convertirE2D(txfEur, txfDol, factor);     // E >> D
-            } else {
-                convertirD2E(txfDol, txfEur, 1 / factor); // D >> E
-            }
-
-            // Selección
-            ((JTextField) (ae.getSource())).setSelectionStart(0);
-        } catch (NumberFormatException e) {
-            // Gestión de Error
-            if (ae.getSource().equals(txfEur)) {
-                txfDol.setText("???");
-            } else {
-                txfEur.setText("???");
-            }
+    public void procesarAccion(ActionEvent e) {
+        if (e.getSource().equals(txfEur)) {
+            convertirE2D();     // E >> D
+        } else {
+            convertirD2E();     // D >> E
         }
     }
 
     // E >> D
-    private void convertirE2D(JTextField txfEur, JTextField txfDol, double factor) throws NumberFormatException {
-        // Campo de texto Euros > Texto
-        String txtEur = txfEur.getText().trim();
-
-        // Formato Fraccionario SPANISH > ENGLISH 
-        txtEur = txtEur.replace(',', '.');
-
-        // Obtiene Euros y Dólares
-        double dinEur = Double.parseDouble(txtEur);
-        double dinDol = dinEur * factor;
-
-        // Formatea Euros y Dólares
-        txtEur = String.format(Locale.ENGLISH, "%.2f", dinEur);
-        String txtDol = String.format(Locale.ENGLISH, "%.2f", dinDol);
-
-        // Actualiza Campos de Texto
-        txfEur.setText(txtEur);
-        txfDol.setText(txtDol);
+    private void convertirE2D() {
+        try {
+            String textoEur = txfEur.getText();
+            textoEur = textoEur.replace(',', '.');
+            double dineroEur = Double.parseDouble(textoEur);
+            textoEur = String.format(Locale.ENGLISH, "%.2f", dineroEur);
+            txfEur.setText(textoEur);
+            double cambio = Double.parseDouble(prp.getProperty("factor_conversion"));
+            double dineroDol = dineroEur * cambio;
+            String textoDol = String.format(Locale.ENGLISH, "%.2f", dineroDol);
+            txfDol.setText(textoDol);
+        } catch (NumberFormatException e) {
+            txfDol.setText("???");
+        }
     }
 
     // D >> E
-    private void convertirD2E(JTextField txfDol, JTextField txfEur, double factor) throws NumberFormatException {
-        // Campo de Texto - Dólares > Texto
-        String txtDol = txfDol.getText().trim();
-
-        // Formato Fraccionario SPANISH > ENGLISH 
-        txtDol = txtDol.replace(',', '.');
-
-        // Obtiene Dólares y Euros
-        double dinDol = Double.parseDouble(txtDol);
-        double dinEur = dinDol * factor;
-
-        // Formatea Euros y Dólares
-        txtDol = String.format(Locale.ENGLISH, "%.2f", dinDol);
-        String txtEur = String.format(Locale.ENGLISH, "%.2f", dinEur);
-
-        // Actualiza Campos de Texto
-        txfDol.setText(txtDol);
-        txfEur.setText(txtEur);
+    private void convertirD2E() {
+        try {
+            String textoDol = txfDol.getText();
+            textoDol = textoDol.replace(',', '.');
+            double dineroDol = Double.parseDouble(textoDol);
+            textoDol = String.format(Locale.ENGLISH, "%.2f", dineroDol);
+            txfDol.setText(textoDol);
+            double cambio = Double.parseDouble(prp.getProperty("factor_conversion"));
+            double dineroEur = dineroDol / cambio;
+            String textoEur = String.format(Locale.ENGLISH, "%.2f", dineroEur);
+            txfEur.setText(textoEur);
+        } catch (NumberFormatException e) {
+            txfEur.setText("???");
+        }
     }
 
     // Gestión Foco Ganado
